@@ -5,25 +5,35 @@ import gsap from 'gsap';
 
 export default function Hero() {
   const containerRef = useRef(null);
+  const mobileContainerRef = useRef(null);
   const zoomRef = useRef(null);
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const buttonsRef = useRef(null);
 
   useEffect(() => {
-    // IMMEDIATELY lock scrolling when component mounts
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
+      // Set initial state for text elements (hidden with mask)
+      gsap.set([titleRef.current, descriptionRef.current, buttonsRef.current], {
+        clipPath: 'inset(100% 0 0 0)', // Hidden from bottom
+        opacity: 0
+      });
+
+      // Get the appropriate container based on screen size
+      const isMobile = window.innerWidth < 768; // md breakpoint
+      const targetContainer = isMobile ? mobileContainerRef.current : containerRef.current;
+
       // Initial zoom-in on video container
-      tl.set(containerRef.current, {
+      tl.set(targetContainer, {
         scale: 3.5,
         transformOrigin: 'center center',
         yPercent: -20,
       });
 
       // Keep zoomed for 2 seconds
-      tl.to(containerRef.current, {
+      tl.to(targetContainer, {
         scale: 3.5,
         yPercent: -20,
         duration: 2,
@@ -31,25 +41,25 @@ export default function Hero() {
       });
 
       // Then zoom out to normal size with smoother easing
-      tl.to(containerRef.current, {
+      tl.to(targetContainer, {
         scale: 1,
         yPercent: 0,
         duration: 2,
         ease: 'power2.out', // Smoother easing for zoom out
       });
 
-      // Re-enable scrolling ONLY after zoom-out animation completes
-      tl.call(() => {
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
-      });
+      // After zoom out, reveal text elements with mask line effect from bottom
+      tl.to([titleRef.current, descriptionRef.current, buttonsRef.current], {
+        clipPath: 'inset(0% 0 0 0)', // Reveal from bottom to top
+        opacity: 1,
+        duration: 1.2,
+        stagger: 0.2, // Stagger the animations
+        ease: 'power2.out'
+      }, '-=1'); // Start slightly before zoom out completes
     }, zoomRef);
 
     return () => {
       ctx.revert();
-      // Cleanup: restore scroll if component unmounts
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
     };
   }, []);
 
@@ -58,15 +68,24 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto py-6" ref={zoomRef}>
         {/* Text Section */}
         <div className="text-center mb-6 px-4">
-          <h1 className="text-lg md:text-2xl font-bold mb-3 text-primary-text">
+          <h1 
+            ref={titleRef}
+            className="text-lg md:text-2xl font-bold mb-3 text-primary-text"
+          >
             Book Your Perfect Futsal Experience
           </h1>
-          <p className="text-sm md:text-base mb-4 max-w-2xl mx-auto text-secondary-text">
+          <p 
+            ref={descriptionRef}
+            className="text-sm md:text-base mb-4 max-w-2xl mx-auto text-secondary-text"
+          >
             At Kickoff Booking, we cater to every futsal need. Whether you're a professional player pushing your limits or someone seeking fun and competitive futsal games, we have the perfect court for you.
           </p>
           
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-center mb-6">
+          <div 
+            ref={buttonsRef}
+            className="flex flex-col sm:flex-row gap-2 justify-center mb-6"
+          >
             <Link
               href="/book"
               className="bg-accent-yellow hover:bg-yellow-500 text-primary-text px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
@@ -133,7 +152,7 @@ export default function Hero() {
           </div>
 
           {/* Mobile Grid */}
-          <div className="md:hidden grid grid-cols-1 gap-2">
+          <div className="md:hidden grid grid-cols-1 gap-2" ref={mobileContainerRef}>
             {['1', '4', '3', '2', '5', '6'].map((img, index) =>
               img === '3' ? (
                 <div key={index} className="h-[150px] bg-gray-200 rounded-lg overflow-hidden">
