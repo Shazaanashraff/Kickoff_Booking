@@ -18,22 +18,19 @@ export default function FeaturedCourts() {
       if (cards) {
         gsap.fromTo(cards, 
           {
-            y: 80,
+            y: 30,
             opacity: 0,
-            scale: 0.95,
           },
           {
             y: 0,
             opacity: 1,
-            scale: 1,
-            duration: 1.2,
-            stagger: 0.15,
-            ease: 'power3.out',
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top 85%',
-              end: 'bottom 15%',
-              toggleActions: 'play none none reverse',
+              start: 'top 80%',
+              end: 'bottom 20%',
             }
           }
         );

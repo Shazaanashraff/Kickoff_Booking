@@ -1,7 +1,8 @@
 import Hero from './Hero';
 import FeaturedCourts from './FeaturedCourts';
 import FindCourts from './FindCourts';
-import Testimonials from './Testimonials';
+import PinnedScroll from './PinnedScroll';
+import DiscountedFutsal from './DiscountedFutsal';
 
 export default function Home() {
   return (
@@ -9,7 +10,8 @@ export default function Home() {
       <Hero />
       <FeaturedCourts />
       <FindCourts />
-      <Testimonials />
+      <PinnedScroll />
+      <DiscountedFutsal />
     </main>
   );
 } 
