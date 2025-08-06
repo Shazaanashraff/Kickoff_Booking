@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function DiscountedFutsal() {
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -80,11 +81,13 @@ export default function DiscountedFutsal() {
             >
               {/* Court Image */}
               <div className="relative h-48 overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${court.image})`
-                  }}
+                <Image
+                  src={court.image}
+                  alt={`${court.name} - Futsal Court`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  priority={court.id <= 2} // Load first 2 images with priority
                 />
                 {/* Discount Badge */}
                 <div className="absolute top-3 left-3 bg-accent-yellow text-primary-text px-3 py-1 rounded-full text-sm font-bold">

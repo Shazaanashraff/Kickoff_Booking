@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -102,10 +103,13 @@ export default function FeaturedCourts() {
             >
               {/* Court Image */}
               <div className="relative h-48 overflow-hidden">
-                <img
+                <Image
                   src={court.image}
-                  alt={court.name}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  alt={`${court.name} - Futsal Court`}
+                  fill
+                  className="object-cover transition-transform duration-300 hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  priority={court.id <= 2} // Load first 2 images with priority
                 />
                 <div className="absolute top-3 left-3">
                   <span className="bg-accent-yellow text-primary-text px-2 py-1 rounded-full text-xs font-semibold">
